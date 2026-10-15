@@ -1,0 +1,886 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0d0f10" />
+    <title>Workspace — STATUSX</title>
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/app.css?v=1.1.0" />
+    <script defer src="/js/icons.js?v=1.1.0"></script>
+    <script defer src="/js/core.js?v=1.1.0"></script>
+    <script defer src="/js/app.js?v=1.1.0"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Langsung ke konten</a
+    ><button
+      class="nav-scrim"
+      id="navScrim"
+      aria-label="Tutup menu"
+      hidden
+    ></button>
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#dashboard"
+        ><span class="brand-symbol">X<span></span></span
+        ><span
+          >STATUS<span class="accent">X</span><small>DOWNLOADER</small></span
+        ></a
+      >
+      <div class="workspace-chip">
+        <span class="workspace-avatar">S</span
+        ><span id="sidebarName">My workspace<small>OPEN WORKSPACE</small></span
+        ><i data-icon="lock"></i>
+      </div>
+      <p class="nav-label">WORKSPACE</p>
+      <nav class="nav">
+        <button class="nav-item active" data-page="dashboard">
+          <i data-icon="grid"></i>Overview<span
+            class="nav-active-dot"
+          ></span></button
+        ><button class="nav-item" data-page="connection">
+          <i data-icon="whatsapp"></i>Hubungkan WhatsApp<span
+            class="nav-connection-dot"
+          ></span></button
+        ><button class="nav-item" data-page="gallery">
+          <i data-icon="image"></i>Galeri Status<span
+            class="nav-count"
+            id="galleryCount"
+            >0</span
+          ></button
+        ><button class="nav-item" data-page="downloads">
+          <i data-icon="download"></i>Download Manager<span
+            class="nav-count"
+            id="taskCount"
+          ></span></button
+        ><button class="nav-item" data-page="history">
+          <i data-icon="clock"></i>Riwayat
+        </button>
+      </nav>
+      <p class="nav-label secondary-nav-label">PREFERENCES</p>
+      <nav class="nav">
+        <button class="nav-item" data-page="settings">
+          <i data-icon="settings"></i>Pengaturan</button
+        ><button class="nav-item" data-page="help">
+          <i data-icon="help"></i>Bantuan
+        </button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="storage-card">
+          <div>
+            <span><i data-icon="disk"></i> Penyimpanan lokal</span
+            ><span id="storagePercent">0%</span>
+          </div>
+          <div class="storage-track"><span id="storageBar"></span></div>
+          <p id="storageText">Menghitung ruang terpakai…</p>
+          <button class="text-btn" data-page="settings">
+            Kelola penyimpanan <i data-icon="external"></i>
+          </button>
+        </div>
+        <button class="profile-button" data-page="settings">
+          <span class="profile-avatar" id="profileInitial">S</span
+          ><span
+            ><strong id="profileName">Workspace terbuka</strong
+            ><small>Pengaturan workspace</small></span
+          ><i data-icon="settings"></i>
+        </button>
+      </div>
+    </aside>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="breadcrumb">
+          <button
+            class="icon-btn mobile-menu"
+            id="menuButton"
+            aria-label="Buka menu"
+            aria-expanded="false"
+            data-icon="menu"
+          ></button
+          ><span class="breadcrumb-root">Workspace</span
+          ><span class="breadcrumb-root slash">/</span
+          ><strong id="pageLabel">Overview</strong>
+        </div>
+        <div class="top-actions">
+          <span class="privacy-label"
+            ><i data-icon="shield"></i> TANPA LOGIN · v1.1</span
+          ><button class="connection-pill" data-page="connection">
+            <span class="dot muted-dot" id="headerDot"></span
+            ><span id="headerConnection">Belum terhubung</span></button
+          ><span class="header-divider"></span
+          ><button
+            class="icon-btn"
+            id="refreshButton"
+            title="Perbarui data"
+            aria-label="Perbarui data"
+            data-icon="refresh"
+          ></button
+          ><button
+            class="top-avatar"
+            data-page="settings"
+            title="Pengaturan workspace"
+            id="topAvatar"
+          >
+            S
+          </button>
+        </div>
+      </header>
+      <main id="main">
+        <div id="openAccessNotice" class="notice" role="note">
+          <i data-icon="info"></i>
+          <p>
+            <strong>Mode tanpa login · v1.1.0.</strong> Siapa pun yang membuka
+            URL ini dapat mengakses media dan mengontrol koneksi WhatsApp.
+            Batasi akses jaringan jika perlu privasi.
+          </p>
+        </div>
+        <div
+          id="bootError"
+          class="notice danger-notice"
+          role="alert"
+          hidden
+        ></div>
+        <div
+          id="bootSkeleton"
+          class="boot-skeleton"
+          aria-label="Memuat workspace"
+        >
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <section class="page" id="page-dashboard">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">YOUR MOMENTS. YOUR SPACE.</p>
+              <h1>
+                Selamat datang, <span id="welcomeName">kembali</span
+                ><span class="accent">.</span>
+              </h1>
+              <p>Yang berharga, nggak harus lewat begitu saja.</p>
+            </div>
+            <button class="btn primary" data-action="import">
+              <i data-icon="plus"></i> Impor media
+            </button>
+          </div>
+          <section class="dashboard-hero">
+            <div class="hero-copy">
+              <span class="mini-pill"
+                ><span class="dot"></span> LOCAL FIRST. ALWAYS YOURS.</span
+              >
+              <h2>Simpan momennya.<br /><span>Bukan kerumitannya.</span></h2>
+              <p>
+                Satu workspace untuk foto dan video yang boleh kamu simpan.<br />Hubungkan
+                akunmu, atau mulai dari media di perangkatmu.
+              </p>
+              <div class="hero-actions">
+                <button class="btn primary" data-page="connection">
+                  <i data-icon="whatsapp"></i> Hubungkan WhatsApp
+                  <i data-icon="external"></i></button
+                ><button class="text-btn" data-page="help">
+                  Kenali STATUSX <i data-icon="arrow"></i>
+                </button>
+              </div>
+            </div>
+            <div class="hero-art" aria-hidden="true">
+              <div class="hero-orbit ring-1"></div>
+              <div class="hero-orbit ring-2"></div>
+              <div class="hero-orbit ring-3"></div>
+              <div class="hero-art-center"><i data-icon="download"></i></div>
+              <div class="floating-icon floating-image">
+                <i data-icon="image"></i>
+              </div>
+              <div class="floating-icon floating-video">
+                <i data-icon="play"></i>
+              </div>
+              <span class="hero-art-caption">KEEP WHAT MATTERS.</span>
+            </div>
+          </section>
+          <div class="stats-grid">
+            <article class="stat-card">
+              <div class="stat-top">
+                <span>Total media</span><i data-icon="folder"></i>
+              </div>
+              <strong id="statMedia">0</strong>
+              <p>
+                <span id="statImages">0 foto</span
+                ><span class="small-separator">·</span
+                ><span id="statVideos">0 video</span>
+              </p>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top">
+                <span>Unduhan diterima</span><i data-icon="download"></i>
+              </div>
+              <strong id="statDownloads">0</strong>
+              <p>File/paket diterima browser</p>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top">
+                <span>Ruang terpakai</span><i data-icon="disk"></i>
+              </div>
+              <strong id="statStorage">0 <small>MB</small></strong>
+              <p id="statStorageLimit">Dari kapasitas workspace</p>
+            </article>
+            <article class="stat-card connection-stat">
+              <div class="stat-top">
+                <span>Koneksi WhatsApp</span><i data-icon="wifi"></i>
+              </div>
+              <strong class="connection-stat-text" id="statConnection"
+                >Offline</strong
+              >
+              <p>
+                <span class="dot muted-dot" id="statDot"></span
+                ><span id="statConnectionNote">Siap saat kamu siap</span>
+              </p>
+            </article>
+          </div>
+          <div class="dashboard-lower">
+            <section class="panel recent-panel">
+              <div class="section-heading">
+                <div>
+                  <h2>Media terbaru</h2>
+                  <p>Sedikit momen, banyak cerita.</p>
+                </div>
+                <button class="text-btn" data-page="gallery">
+                  Lihat galeri <i data-icon="arrow"></i>
+                </button>
+              </div>
+              <div id="recentMedia"></div>
+            </section>
+            <section class="panel quick-start">
+              <span class="tiny-label">START SOMETHING GOOD</span>
+              <h2>Ruangmu.<br />Cara mulainya, terserahmu.</h2>
+              <button class="start-option" data-page="connection">
+                <span class="option-icon green"
+                  ><i data-icon="whatsapp"></i></span
+                ><span
+                  ><strong>Hubungkan akunmu</strong
+                  ><small>Baileys opsional · akun berizin</small></span
+                ><i data-icon="external"></i></button
+              ><button class="start-option" data-action="import">
+                <span class="option-icon"><i data-icon="upload"></i></span
+                ><span
+                  ><strong>Impor dari perangkat</strong
+                  ><small>Foto atau video yang kamu miliki</small></span
+                ><i data-icon="external"></i>
+              </button>
+              <div class="privacy-note">
+                <i data-icon="shield"></i>
+                <p>
+                  Privasi dimulai dari pilihanmu.<br />Tidak menyimpan isi
+                  percakapan pribadi.
+                </p>
+              </div>
+            </section>
+          </div>
+          <div class="bottom-note">
+            <span><i data-icon="info"></i> Tanpa login</span
+            ><span><i data-icon="disk"></i> Tanpa database eksternal</span
+            ><span><i data-icon="shield"></i> Media milikmu atau berizin</span>
+          </div>
+        </section>
+        <section class="page" id="page-connection" hidden>
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">YOUR ACCOUNT. YOUR PERMISSION.</p>
+              <h1>Hubungkan WhatsApp<span class="accent">.</span></h1>
+              <p>
+                Nomor telepon saja tidak memberikan akses. Autentikasi dilakukan
+                di ponselmu.
+              </p>
+            </div>
+            <span class="pill">BAILEYS INTEGRATION</span>
+          </div>
+          <div class="notice">
+            <i data-icon="info"></i>
+            <p>
+              <strong>Integrasi tidak resmi, pilihanmu sendiri.</strong> Baileys
+              menggunakan WhatsApp Web, bukan API resmi Meta. Ada risiko
+              perubahan layanan dan pembatasan akun. Tidak menjamin semua status
+              tersedia. Impor lokal selalu bisa digunakan.
+            </p>
+          </div>
+          <div class="connection-grid">
+            <section class="panel connect-form-panel">
+              <div class="section-heading">
+                <h2>Tambahkan perangkat</h2>
+                <i data-icon="phone"></i>
+              </div>
+              <form id="connectionForm">
+                <div
+                  class="segmented"
+                  role="group"
+                  aria-label="Metode autentikasi"
+                >
+                  <button type="button" class="selected" data-method="pairing">
+                    Pairing code</button
+                  ><button type="button" data-method="qr">Scan QR</button>
+                </div>
+                <div id="phoneFields">
+                  <label for="phoneInput">Nomor WhatsApp</label>
+                  <div class="phone-field">
+                    <select id="countryCode" aria-label="Kode negara">
+                      <option value="62">ID +62</option>
+                      <option value="60">MY +60</option>
+                      <option value="65">SG +65</option>
+                      <option value="1">US +1</option>
+                      <option value="44">UK +44</option>
+                      <option value="91">IN +91</option>
+                      <option value="">Lainnya</option></select
+                    ><input
+                      id="phoneInput"
+                      type="tel"
+                      inputmode="tel"
+                      autocomplete="tel-national"
+                      maxlength="22"
+                      placeholder="812 3456 7890"
+                    />
+                  </div>
+                  <p class="field-hint">
+                    Tanpa awalan 0. Pilih “Lainnya” untuk memasukkan nomor
+                    lengkap dengan kode negara.
+                  </p>
+                </div>
+                <div id="qrExplanation" class="notice subtle" hidden>
+                  <i data-icon="phone"></i>
+                  <p>
+                    Buka WhatsApp → Perangkat tertaut → Tautkan perangkat. QR
+                    baru muncul setelah diterima dari koneksi Baileys.
+                  </p>
+                </div>
+                <label class="checkbox-label"
+                  ><input type="checkbox" id="waConsent" required /><span
+                    >Saya pemilik akun atau memiliki izin. Saya memahami risiko
+                    integrasi tidak resmi dan hanya menyimpan media yang
+                    diizinkan.</span
+                  ></label
+                ><button
+                  type="submit"
+                  class="btn primary full"
+                  id="connectButton"
+                >
+                  <i data-icon="link"></i> Mulai koneksi</button
+                ><button
+                  type="button"
+                  class="btn secondary full"
+                  id="resumeButton"
+                  hidden
+                >
+                  <i data-icon="refresh"></i> Lanjutkan sesi tersimpan
+                </button>
+              </form>
+              <div class="setting-inline">
+                <div>
+                  <strong>Koleksi status otomatis</strong>
+                  <p>
+                    Simpan foto/video status baru yang diterima akun. Tidak
+                    mengambil status lama atau view-once.
+                  </p>
+                </div>
+                <label class="switch"
+                  ><input
+                    type="checkbox"
+                    id="collectToggle"
+                    aria-label="Koleksi status otomatis" /><span></span
+                ></label>
+              </div>
+            </section>
+            <section class="panel connection-state-panel">
+              <div class="section-heading">
+                <h2>Status perangkat</h2>
+                <span class="pill" id="waStateBadge">OFFLINE</span>
+              </div>
+              <div id="waStatusVisual" class="connection-empty">
+                <span class="connection-icon"><i data-icon="phone"></i></span>
+                <h3 id="waStateTitle">Belum ada koneksi</h3>
+                <p id="waMessage">
+                  Hubungkan akunmu untuk mulai menerima media status yang
+                  tersedia secara sah.
+                </p>
+              </div>
+              <div id="pairingPanel" hidden>
+                <p class="tiny-label">KODE DARI BAILEYS · JANGAN DIBAGIKAN</p>
+                <div id="pairingCode" class="pairing-code"></div>
+                <p class="field-hint">
+                  WhatsApp → Perangkat tertaut → Tautkan dengan nomor telepon.
+                </p>
+              </div>
+              <div id="qrPanel" hidden>
+                <img
+                  id="qrImage"
+                  alt="QR autentikasi WhatsApp"
+                  width="280"
+                  height="280"
+                />
+                <p class="field-hint">
+                  Pindai hanya dengan akun yang kamu miliki/diizinkan.
+                </p>
+              </div>
+              <p id="waNotice" class="form-error" hidden></p>
+              <div class="connection-buttons">
+                <button class="btn secondary" id="cancelConnection" hidden>
+                  Batalkan proses</button
+                ><button class="btn danger" id="disconnectButton" hidden>
+                  <i data-icon="logout"></i> Putuskan & hapus sesi
+                </button>
+              </div>
+              <p class="connection-footnote">
+                Sesi dilindungi di server. Kode dan QR tidak dicetak ke log.
+              </p>
+            </section>
+          </div>
+        </section>
+        <section class="page" id="page-gallery" hidden>
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">A HOME FOR YOUR MOMENTS.</p>
+              <h1>Galeri status<span class="accent">.</span></h1>
+              <p>
+                Hanya media aktual dari akun berizin atau impor perangkatmu.
+              </p>
+            </div>
+            <button class="btn primary" data-action="import">
+              <i data-icon="plus"></i> Impor media
+            </button>
+          </div>
+          <div class="gallery-toolbar">
+            <div class="filter-tabs" role="group" aria-label="Jenis media">
+              <button class="active" data-filter="all">
+                Semua <span id="allCount">0</span></button
+              ><button data-filter="image">
+                <i data-icon="image"></i> Foto</button
+              ><button data-filter="video">
+                <i data-icon="video"></i> Video
+              </button>
+            </div>
+            <div class="gallery-controls">
+              <label class="search-box"
+                ><i data-icon="search"></i
+                ><input
+                  id="mediaSearch"
+                  type="search"
+                  placeholder="Cari nama file…"
+                  aria-label="Cari nama file" /></label
+              ><select id="mediaSort" aria-label="Urutan media">
+                <option value="new">Terbaru</option>
+                <option value="old">Terlama</option>
+                <option value="name">Nama A–Z</option>
+                <option value="size">Ukuran terbesar</option>
+              </select>
+            </div>
+          </div>
+          <div class="gallery-subtoolbar">
+            <label class="checkbox-label compact"
+              ><input type="checkbox" id="selectAll" /><span
+                >Pilih semua hasil (maks. 100)</span
+              ></label
+            ><span id="gallerySummary" class="muted small">0 media</span>
+          </div>
+          <div id="mediaGrid" class="media-grid"></div>
+          <div id="selectionBar" class="selection-bar" hidden>
+            <span><strong id="selectionCount">0</strong> dipilih</span
+            ><button class="btn primary" id="downloadSelected">
+              <i data-icon="zip"></i> Download pilihan</button
+            ><button class="btn secondary danger-text" id="deleteSelected">
+              <i data-icon="trash"></i> Hapus</button
+            ><button
+              class="icon-btn"
+              id="clearSelection"
+              aria-label="Batalkan seleksi"
+              data-icon="close"
+            ></button>
+          </div>
+        </section>
+        <section class="page" id="page-downloads" hidden>
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">FROM YOUR SPACE TO YOUR DEVICE.</p>
+              <h1>Download manager<span class="accent">.</span></h1>
+              <p>
+                Antrean di browser ini. Satu transfer aktif agar penggunaan
+                memori tetap terkendali.
+              </p>
+            </div>
+            <button class="btn secondary" id="clearTasks">
+              <i data-icon="check"></i> Bersihkan yang selesai
+            </button>
+          </div>
+          <div class="notice subtle">
+            <i data-icon="info"></i>
+            <p>
+              Progress diukur dari byte yang diterima. “Diterima browser”
+              berarti file diserahkan ke pengelola unduhan browser, bukan
+              verifikasi file tersimpan di disk. Jangan tutup tab saat antrean
+              berjalan.
+            </p>
+          </div>
+          <div id="downloadList" class="download-list"></div>
+        </section>
+        <section class="page" id="page-history" hidden>
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">A LITTLE HISTORY OF YOUR FLOW.</p>
+              <h1>Riwayat unduhan<span class="accent">.</span></h1>
+              <p>
+                Catatan transfer di server lokal, bukan isi percakapan WhatsApp.
+              </p>
+            </div>
+            <button class="btn secondary danger-text" id="clearHistory">
+              <i data-icon="trash"></i> Hapus riwayat
+            </button>
+          </div>
+          <div class="history-toolbar">
+            <label class="search-box"
+              ><i data-icon="search"></i
+              ><input
+                type="search"
+                id="historySearch"
+                placeholder="Cari nama paket atau file…"
+                aria-label="Cari riwayat" /></label
+            ><button class="btn secondary" id="exportHistory">
+              <i data-icon="download"></i> Ekspor JSON
+            </button>
+          </div>
+          <div class="panel history-panel">
+            <div class="history-table-head">
+              <span>FILE / PAKET</span><span>UKURAN</span><span>STATUS</span
+              ><span>AKSI</span>
+            </div>
+            <div id="historyList"></div>
+          </div>
+        </section>
+        <section class="page" id="page-settings" hidden>
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">MAKE SPACE FOR YOUR PREFERENCES.</p>
+              <h1>Workspace, caramu<span class="accent">.</span></h1>
+              <p>Pengaturan disimpan sebagai JSON di direktori data server.</p>
+            </div>
+          </div>
+          <form id="settingsForm" class="panel settings-panel">
+            <h2>Pengaturan umum</h2>
+            <div class="setting-row">
+              <div>
+                <label for="displayName">Nama workspace</label>
+                <p>Nama pribadi untuk ruang media ini.</p>
+              </div>
+              <input
+                id="displayName"
+                maxlength="50"
+                required
+                placeholder="My workspace"
+              />
+            </div>
+            <div class="setting-row">
+              <div>
+                <label for="retentionDays">Retensi media</label>
+                <p>
+                  Media yang melewati usia ini dihapus otomatis dari galeri dan
+                  disk.
+                </p>
+              </div>
+              <select id="retentionDays">
+                <option value="1">1 hari</option>
+                <option value="3">3 hari</option>
+                <option value="7">7 hari</option>
+                <option value="14">14 hari</option>
+                <option value="30">30 hari</option>
+                <option value="0">Sampai dihapus manual</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <div>
+                <strong>Kurangi animasi</strong>
+                <p>
+                  Tampilan lebih tenang. Preferensi perangkat juga dihormati.
+                </p>
+              </div>
+              <label class="switch"
+                ><input
+                  id="reduceMotion"
+                  type="checkbox"
+                  aria-label="Kurangi animasi" /><span></span
+              ></label>
+            </div>
+            <div class="setting-row">
+              <div>
+                <strong>Koleksi status otomatis</strong>
+                <p>
+                  Hanya foto/video status baru, bukan chat atau media view-once.
+                </p>
+              </div>
+              <label class="switch"
+                ><input
+                  id="settingsCollect"
+                  type="checkbox"
+                  aria-label="Koleksi status otomatis" /><span></span
+              ></label>
+            </div>
+            <div class="settings-save">
+              <p class="muted small">
+                Retensi berlaku untuk impor lokal dan status WhatsApp.
+              </p>
+              <button type="submit" class="btn primary" id="saveSettings">
+                <i data-icon="check"></i> Simpan perubahan
+              </button>
+            </div>
+          </form>
+          <section class="panel settings-panel">
+            <h2>Penyimpanan & keamanan</h2>
+            <div class="setting-row">
+              <div>
+                <strong>Pembersihan media kedaluwarsa</strong>
+                <p id="cleanupDescription">
+                  Mengikuti retensi yang tersimpan. File sementara dibersihkan
+                  berkala.
+                </p>
+              </div>
+              <button class="btn secondary" id="cleanupButton">
+                <i data-icon="trash"></i> Bersihkan sekarang
+              </button>
+            </div>
+            <div class="setting-row">
+              <div>
+                <strong>Tanpa login</strong>
+                <p>
+                  Tidak ada username atau password website. Siapa pun yang dapat
+                  membuka URL memiliki akses ke media dan kontrol WhatsApp.
+                </p>
+              </div>
+              <span class="pill"><i data-icon="info"></i> OPEN ACCESS</span>
+            </div>
+            <div class="notice">
+              <i data-icon="disk"></i>
+              <p>
+                <strong>Railway Volume diperlukan untuk persistensi.</strong>
+                File tidak dijamin bertahan saat redeploy tanpa volume yang
+                dipasang ke <code>DATA_DIR</code>. Jalankan hanya satu replica.
+              </p>
+            </div>
+          </section>
+        </section>
+        <section class="page" id="page-help" hidden>
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">CLEAR EXPECTATIONS. BETTER EXPERIENCE.</p>
+              <h1>
+                Sedikit panduan, banyak ruang<span class="accent">.</span>
+              </h1>
+              <p>
+                Mulai dengan izin yang benar, lanjut dengan alur yang sederhana.
+              </p>
+            </div>
+          </div>
+          <div class="guide-grid">
+            <article class="panel">
+              <span>01</span>
+              <h2>Pilih sumbermu</h2>
+              <p>
+                Impor file yang kamu miliki, atau tautkan akun WhatsApp
+                sendiri/berizin melalui Baileys.
+              </p>
+            </article>
+            <article class="panel">
+              <span>02</span>
+              <h2>Atur koleksimu</h2>
+              <p>
+                Preview, cari, dan filter media. Koleksi otomatis hanya berjalan
+                saat koneksi aktif dan diaktifkan.
+              </p>
+            </article>
+            <article class="panel">
+              <span>03</span>
+              <h2>Simpan dengan sadar</h2>
+              <p>
+                Unduh satu file atau beberapa sebagai ZIP. Atur retensi agar
+                media tidak menumpuk tanpa batas.
+              </p>
+            </article>
+          </div>
+          <div class="panel faq">
+            <h2>Yang perlu kamu tahu</h2>
+            <details open>
+              <summary>Apakah ini aplikasi resmi WhatsApp?</summary>
+              <p>
+                Tidak. STATUSX memakai Baileys sebagai integrasi WhatsApp Web
+                tidak resmi dan tidak berafiliasi dengan Meta. API resmi tidak
+                menyediakan endpoint untuk membaca status kontak. Jika tidak
+                ingin memakai integrasi tidak resmi, gunakan impor lokal atau
+                set BAILEYS_ENABLED=false.
+              </p>
+            </details>
+            <details>
+              <summary>Kenapa status tertentu tidak muncul?</summary>
+              <p>
+                Tidak ada akses ke semua status hanya dengan nomor telepon.
+                STATUSX hanya memproses event status baru yang benar-benar
+                diterima akun terhubung saat koleksi otomatis aktif. Status yang
+                kedaluwarsa, tidak dibagikan kepadamu, view-once, status teks,
+                dan history chat tidak dikoleksi.
+              </p>
+            </details>
+            <details>
+              <summary>Apakah pesan pribadi dibaca atau disimpan?</summary>
+              <p>
+                Aplikasi tidak membuat endpoint pembaca chat, tidak menyimpan
+                percakapan pribadi, dan hanya memproses media dari
+                status@broadcast. Protokol Baileys tetap menangani lalu lintas
+                akun yang diperlukan untuk koneksi. Gunakan hanya akun
+                sendiri/berizin.
+              </p>
+            </details>
+            <details>
+              <summary>Pairing atau QR gagal?</summary>
+              <p>
+                Periksa internet server, versi WhatsApp, dan Perangkat tertaut.
+                Kode/QR selalu berasal dari Baileys, tidak dibuat sebagai demo.
+                Autentikasi memiliki batas waktu. Coba QR jika pairing gagal.
+                Setelah memutuskan, periksa dan cabut juga perangkat di aplikasi
+                WhatsApp.
+              </p>
+            </details>
+            <details>
+              <summary>Apakah data permanen di Railway?</summary>
+              <p>
+                Hanya jika Railway Volume dipasang dengan benar ke direktori
+                DATA_DIR. Mount /app/data, set DATA_DIR=/app/data, dan gunakan
+                satu replica. Volume bukan backup; buat backup terenkripsi
+                secara terpisah. Lihat README untuk deployment lengkap.
+              </p>
+            </details>
+            <details>
+              <summary>Bagaimana file dan sesi dilindungi?</summary>
+              <p>
+                Versi ini tidak memiliki autentikasi website: siapa pun yang
+                dapat menjangkau URL dapat memakai galeri dan kontrol WhatsApp.
+                Cookie otomatis hanya dipakai untuk CSRF, bukan untuk membatasi
+                akses. Rate limiting, validasi file, dan perlindungan path tetap
+                aktif. File sesi WhatsApp tidak disediakan lewat endpoint file.
+                Batasi akses jaringan jika memerlukan privasi; URL rahasia saja
+                bukan perlindungan akses. Jangan bagikan folder data.
+              </p>
+            </details>
+            <details>
+              <summary>Format dan batas file apa yang didukung?</summary>
+              <p>
+                JPG, PNG, WebP, GIF, MP4, dan WebM. Maksimal 10 file per impor.
+                Batas per file, paket ZIP, dan kapasitas workspace mengikuti
+                environment server. Browser mungkin tidak mendukung semua codec
+                MP4/WebM; file tetap dapat diunduh.
+              </p>
+            </details>
+            <details>
+              <summary>Bagaimana menghentikan koneksi WhatsApp?</summary>
+              <p>
+                Tidak ada login/logout website dalam versi ini. Menutup tab
+                tidak memutus WhatsApp. Gunakan tombol Putuskan & hapus sesi
+                pada halaman koneksi, lalu periksa juga Perangkat tertaut di
+                ponsel.
+              </p>
+            </details>
+          </div>
+        </section>
+        <footer class="app-footer">
+          <span class="footer-wordmark"
+            >STATUS<span class="accent">X</span
+            ><small>Less noise. More moments.</small></span
+          ><span
+            >Respect privacy. Keep it personal.
+            <span class="accent">↗</span></span
+          >
+        </footer>
+      </main>
+    </div>
+    <nav class="mobile-bottom" aria-label="Navigasi cepat">
+      <button data-page="dashboard" class="active">
+        <i data-icon="grid"></i><span>Overview</span></button
+      ><button data-page="gallery">
+        <i data-icon="image"></i><span>Galeri</span></button
+      ><button data-action="import">
+        <i data-icon="plus"></i><span>Impor</span></button
+      ><button data-page="downloads">
+        <i data-icon="download"></i><span>Unduhan</span></button
+      ><button data-page="connection">
+        <i data-icon="whatsapp"></i><span>Koneksi</span>
+      </button>
+    </nav>
+    <dialog id="uploadDialog" class="upload-dialog">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">BRING YOUR MOMENTS IN.</p>
+          <h2>Impor media</h2>
+        </div>
+        <button
+          class="icon-btn"
+          data-close="uploadDialog"
+          aria-label="Tutup"
+          data-icon="close"
+        ></button>
+      </div>
+      <form id="uploadForm">
+        <label class="drop-zone" id="dropZone" for="uploadFiles"
+          ><span class="square-icon"><i data-icon="upload"></i></span
+          ><strong>Pilih file atau jatuhkan di sini</strong
+          ><span>JPG, PNG, WebP, GIF, MP4, WebM</span
+          ><small id="uploadLimit">Maksimal 10 file per impor</small></label
+        ><input
+          id="uploadFiles"
+          class="file-input"
+          type="file"
+          multiple
+          accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"
+        />
+        <div id="uploadFileList" class="upload-file-list"></div>
+        <label class="checkbox-label"
+          ><input id="uploadConsent" type="checkbox" required /><span
+            >Saya memiliki media ini atau memiliki izin untuk menyimpan dan
+            mengunduhnya.</span
+          ></label
+        >
+        <div id="uploadProgressWrap" hidden>
+          <div class="progress-track"><span id="uploadProgressBar"></span></div>
+          <p id="uploadProgressText" class="field-hint" role="status"></p>
+        </div>
+        <div class="dialog-actions">
+          <button type="button" class="btn secondary" id="cancelUpload">
+            Batal</button
+          ><button type="submit" class="btn primary" id="uploadSubmit">
+            <i data-icon="upload"></i> Impor ke galeri
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="previewDialog" class="preview-dialog">
+      <div class="dialog-heading">
+        <div>
+          <h2 id="previewTitle">Preview media</h2>
+          <p id="previewMeta" class="muted small"></p>
+        </div>
+        <button
+          class="icon-btn"
+          data-close="previewDialog"
+          aria-label="Tutup preview"
+          data-icon="close"
+        ></button>
+      </div>
+      <div id="previewContent" class="preview-content"></div>
+      <div class="dialog-actions">
+        <button class="btn secondary danger-text" id="previewDelete">
+          <i data-icon="trash"></i> Hapus</button
+        ><button class="btn primary" id="previewDownload">
+          <i data-icon="download"></i> Download
+        </button>
+      </div>
+    </dialog>
+    <dialog id="confirmDialog" class="confirm-dialog">
+      <span class="square-icon"><i data-icon="shield"></i></span>
+      <h2 id="confirmTitle">Konfirmasi</h2>
+      <p id="confirmText"></p>
+      <form method="dialog" class="dialog-actions">
+        <button class="btn secondary" value="cancel">Batal</button
+        ><button class="btn primary" value="confirm">Ya, lanjutkan</button>
+      </form>
+    </dialog>
+    <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+    <noscript>Aktifkan JavaScript untuk menggunakan STATUSX.</noscript>
+  </body>
+</html>

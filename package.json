@@ -1,0 +1,29 @@
+{
+  "name": "statusx-downloader",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Open-access status media workspace. No website login; local files, CSRF protection and optional authorized Baileys integration.",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "start": "node src/server/index.js",
+    "dev": "node --watch src/server/index.js",
+    "test": "node --test --test-concurrency=1 test/*.test.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "6.7.23",
+    "archiver": "^7.0.1",
+    "express": "^4.21.2",
+    "express-session": "^1.18.2",
+    "file-type": "^21.3.4",
+    "helmet": "^8.1.0",
+    "multer": "^2.0.2",
+    "pino": "^9.6.0",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "supertest": "^7.3.1"
+  }
+}
